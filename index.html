@@ -66,37 +66,53 @@ button:hover { transform: translateY(-2px); box-shadow:0 16px 28px rgba(213,58,1
 .scene-3 { background: radial-gradient(circle at top, #d9f4ff, #a5d7f2 55%, #7fb6e6); }
 .scene-4 { background: radial-gradient(circle at 20% 20%, #ffe0d0, #f7b5a6 50%, #f08a89); }
 .scene-5 { background: radial-gradient(circle at 40% 20%, #f9f0ff, #d6b6f0 55%, #b28be1); }
+.scene-6 { background: radial-gradient(circle at center, #fff0f5, #ffb6c1 70%); }
 
-.heart {
+.heart, .big-heart {
   position: relative;
-  width: 90px; height: 90px;
-  margin: 24px auto 12px;
   transform: rotate(-45deg);
   background: var(--accent);
-  animation: pulse 1.4s ease-in-out infinite;
+  animation: pulse 1.5s ease-in-out infinite;
 }
-.heart::before,
-.heart::after {
-  content: '';
-  position: absolute;
-  width: 90px; height: 90px;
-  border-radius: 50%;
-  background: var(--accent);
-}
-.heart::before { top: -45px; left:0; }
-.heart::after { left:45px; top:0; }
+.heart, .big-heart { margin: 20px auto; }
+.heart { width: 90px; height:90px; }
+.big-heart { width:150px; height:150px; }
 
-@keyframes pulse {
-  0% { transform: rotate(-45deg) scale(1); box-shadow:0 0 0 0 rgba(255,92,138,0.45); }
-  50% { transform: rotate(-45deg) scale(1.08); box-shadow:0 0 0 18px rgba(255,92,138,0); }
-  100% { transform: rotate(-45deg) scale(1); box-shadow:0 0 0 0 rgba(255,92,138,0); }
+.heart::before, .heart::after, .big-heart::before, .big-heart::after {
+  content:'';
+  position:absolute;
+  border-radius:50%;
+  background:var(--accent);
+}
+.heart::before { top:-45px; left:0; width:90px;height:90px; }
+.heart::after { left:45px; top:0;width:90px;height:90px; }
+.big-heart::before { top:-75px; left:0;width:150px;height:150px; }
+.big-heart::after { left:75px; top:0;width:150px;height:150px; }
+
+@keyframes pulse{
+  0%{transform: rotate(-45deg) scale(1); box-shadow:0 0 0 0 rgba(255,92,138,0.45);}
+  50%{transform: rotate(-45deg) scale(1.08); box-shadow:0 0 0 18px rgba(255,92,138,0);}
+  100%{transform: rotate(-45deg) scale(1); box-shadow:0 0 0 0 rgba(255,92,138,0);}
+}
+
+.confetti{
+  position:absolute;
+  top:-10px;
+  width:10px; height:10px;
+  border-radius:50%;
+  opacity:0.8;
+  animation:fall linear infinite;
+}
+@keyframes fall{
+  0%{ transform: translateY(0) rotate(0deg); opacity:1;}
+  100%{ transform: translateY(100vh) rotate(360deg); opacity:0;}
 }
 </style>
 </head>
 <body>
 <main>
 
-<!-- Scene template -->
+<!-- Question Scenes -->
 <section class="scene scene-1 active" data-step="0">
   <div class="card">
     <h1>Hi, Lovely!</h1>
@@ -106,12 +122,8 @@ button:hover { transform: translateY(-2px); box-shadow:0 16px 28px rgba(213,58,1
       <button data-answer="no">Not really 😅</button>
     </div>
     <div class="response"></div>
-    <div class="progress" aria-hidden="true">
-      <span class="dot active"></span>
-      <span class="dot"></span>
-      <span class="dot"></span>
-      <span class="dot"></span>
-      <span class="dot"></span>
+    <div class="progress">
+      <span class="dot active"></span><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="dot"></span>
     </div>
   </div>
 </section>
@@ -125,12 +137,8 @@ button:hover { transform: translateY(-2px); box-shadow:0 16px 28px rgba(213,58,1
       <button data-answer="no">Maybe later 😏</button>
     </div>
     <div class="response"></div>
-    <div class="progress" aria-hidden="true">
-      <span class="dot"></span>
-      <span class="dot active"></span>
-      <span class="dot"></span>
-      <span class="dot"></span>
-      <span class="dot"></span>
+    <div class="progress">
+      <span class="dot"></span><span class="dot active"></span><span class="dot"></span><span class="dot"></span><span class="dot"></span>
     </div>
   </div>
 </section>
@@ -144,12 +152,8 @@ button:hover { transform: translateY(-2px); box-shadow:0 16px 28px rgba(213,58,1
       <button data-answer="no">Hmm… not yet 😅</button>
     </div>
     <div class="response"></div>
-    <div class="progress" aria-hidden="true">
-      <span class="dot"></span>
-      <span class="dot"></span>
-      <span class="dot active"></span>
-      <span class="dot"></span>
-      <span class="dot"></span>
+    <div class="progress">
+      <span class="dot"></span><span class="dot"></span><span class="dot active"></span><span class="dot"></span><span class="dot"></span>
     </div>
   </div>
 </section>
@@ -163,31 +167,34 @@ button:hover { transform: translateY(-2px); box-shadow:0 16px 28px rgba(213,58,1
       <button data-answer="no">I’ll think about it 😅</button>
     </div>
     <div class="response"></div>
-    <div class="progress" aria-hidden="true">
-      <span class="dot"></span>
-      <span class="dot"></span>
-      <span class="dot"></span>
-      <span class="dot active"></span>
-      <span class="dot"></span>
+    <div class="progress">
+      <span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="dot active"></span><span class="dot"></span>
     </div>
   </div>
 </section>
 
 <section class="scene scene-5" data-step="4">
-  <div class="card final-message">
+  <div class="card">
     <h1>My Heart Says...</h1>
     <div class="heart"></div>
     <p class="prompt">Will you be my Valentine?</p>
     <div class="actions">
-      <button data-restart>Read Again 💖</button>
+      <button data-answer="yes">Yes 💖</button>
+      <button data-answer="no">Hmm… maybe 😅</button>
     </div>
-    <div class="progress" aria-hidden="true">
-      <span class="dot"></span>
-      <span class="dot"></span>
-      <span class="dot"></span>
-      <span class="dot"></span>
-      <span class="dot active"></span>
+    <div class="response"></div>
+    <div class="progress">
+      <span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="dot active"></span>
     </div>
+  </div>
+</section>
+
+<!-- Celebration Scene -->
+<section class="scene scene-6" data-step="5">
+  <div class="card" style="background:transparent; box-shadow:none;">
+    <h1 style="font-size:3rem;">🎉 You said YES! 💖</h1>
+    <div class="big-heart"></div>
+    <p style="font-size:1.5rem; margin-top:20px;">Let’s celebrate our love!</p>
   </div>
 </section>
 
@@ -197,16 +204,16 @@ button:hover { transform: translateY(-2px); box-shadow:0 16px 28px rgba(213,58,1
 const scenes = Array.from(document.querySelectorAll('.scene'));
 let current = 0;
 
+// Show scene and update dots
 function showScene(index){
   scenes.forEach((scene,i)=>scene.classList.toggle('active', i===index));
-  // Update progress dots
   scenes.forEach(scene=>{
     const dots = scene.querySelectorAll('.dot');
     dots.forEach((dot,j)=>dot.classList.toggle('active', j===index));
   });
 }
 
-// Define playful responses for "No"
+// Playful "No" responses
 const noResponses = [
   "Oh! Maybe next time 😅",
   "Haha, I’ll wait for your heart 💖",
@@ -219,23 +226,42 @@ document.querySelectorAll('[data-answer]').forEach(button=>{
     const answer = button.dataset.answer;
     const scene = button.closest('.scene');
     const responseEl = scene.querySelector('.response');
+
+    // Final proposal Yes -> Celebration
+    if(scene.dataset.step==='4' && answer==='yes'){
+      current = 5; // Celebration scene
+      showScene(current);
+      startConfetti();
+      return;
+    }
+
     if(answer==='yes'){
       current++;
       if(current >= scenes.length) current = 0;
       showScene(current);
-      responseEl.textContent = ''; // clear any previous response
+      responseEl.textContent='';
     } else {
-      // Show playful inline message
       const msg = noResponses[Math.floor(Math.random()*noResponses.length)];
       responseEl.textContent = msg;
     }
   });
 });
 
-document.querySelector('[data-restart]').addEventListener('click', ()=>{
-  current=0;
-  showScene(current);
-});
+// Confetti effect
+function startConfetti(){
+  const page = scenes[current];
+  for(let i=0;i<150;i++){
+    const confetti = document.createElement('div');
+    confetti.className='confetti';
+    confetti.style.left = Math.random()*100 + 'vw';
+    confetti.style.backgroundColor = `hsl(${Math.random()*360},70%,60%)`;
+    confetti.style.width = confetti.style.height = Math.random()*10 + 5 + 'px';
+    confetti.style.animationDuration = 3 + Math.random()*2 + 's';
+    page.appendChild(confetti);
+    setTimeout(()=>page.removeChild(confetti),5000);
+  }
+  setInterval(()=>startConfetti(),1000);
+}
 </script>
 </body>
 </html>
