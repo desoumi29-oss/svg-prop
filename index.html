@@ -68,26 +68,26 @@ button:hover { transform: translateY(-2px); box-shadow:0 16px 28px rgba(213,58,1
 .scene-5 { background: radial-gradient(circle at 40% 20%, #f9f0ff, #d6b6f0 55%, #b28be1); }
 .scene-6 { background: radial-gradient(circle at center, #fff0f5, #ffb6c1 70%); }
 
-.heart, .big-heart {
-  position: relative;
-  transform: rotate(-45deg);
-  background: var(--accent);
+.heart {
+  width:90px; height:90px; margin:20px auto; position:relative;
+  transform: rotate(-45deg); background:var(--accent);
   animation: pulse 1.5s ease-in-out infinite;
 }
-.heart, .big-heart { margin: 20px auto; }
-.heart { width: 90px; height:90px; }
-.big-heart { width:150px; height:150px; }
+.heart::before { content:''; position:absolute; width:90px;height:90px; border-radius:50%; background:var(--accent); top:-45px; left:0; }
+.heart::after { content:''; position:absolute; width:90px;height:90px; border-radius:50%; background:var(--accent); top:0; left:45px; }
 
-.heart::before, .heart::after, .big-heart::before, .big-heart::after {
-  content:'';
-  position:absolute;
-  border-radius:50%;
-  background:var(--accent);
+.big-heart{
+  width:150px; height:150px; margin:40px auto 0; position:relative;
+  transform: rotate(-45deg) scale(0);
+  background: var(--accent);
+  animation: pulse 1.5s ease-in-out infinite, scaleIn 0.8s ease forwards;
 }
-.heart::before { top:-45px; left:0; width:90px;height:90px; }
-.heart::after { left:45px; top:0;width:90px;height:90px; }
-.big-heart::before { top:-75px; left:0;width:150px;height:150px; }
-.big-heart::after { left:75px; top:0;width:150px;height:150px; }
+.big-heart::before{
+  content:''; position:absolute; width:150px;height:150px; border-radius:50%; background:var(--accent); top:-75px; left:0;
+}
+.big-heart::after{
+  content:''; position:absolute; width:150px;height:150px; border-radius:50%; background:var(--accent); top:0; left:75px;
+}
 
 @keyframes pulse{
   0%{transform: rotate(-45deg) scale(1); box-shadow:0 0 0 0 rgba(255,92,138,0.45);}
@@ -95,13 +95,12 @@ button:hover { transform: translateY(-2px); box-shadow:0 16px 28px rgba(213,58,1
   100%{transform: rotate(-45deg) scale(1); box-shadow:0 0 0 0 rgba(255,92,138,0);}
 }
 
+@keyframes scaleIn{
+  to { transform: rotate(-45deg) scale(1); }
+}
+
 .confetti{
-  position:absolute;
-  top:-10px;
-  width:10px; height:10px;
-  border-radius:50%;
-  opacity:0.8;
-  animation:fall linear infinite;
+  position:absolute; top:-10px; width:10px; height:10px; border-radius:50%; opacity:0.8; animation:fall linear infinite;
 }
 @keyframes fall{
   0%{ transform: translateY(0) rotate(0deg); opacity:1;}
@@ -191,8 +190,8 @@ button:hover { transform: translateY(-2px); box-shadow:0 16px 28px rgba(213,58,1
 
 <!-- Celebration Scene -->
 <section class="scene scene-6" data-step="5">
-  <div class="card" style="background:transparent; box-shadow:none;">
-    <h1 style="font-size:3rem;">🎉 You said YES! 💖</h1>
+  <div class="card" style="background:transparent; box-shadow:none; display:flex; flex-direction:column; align-items:center;">
+    <h1 style="font-size:3rem; margin-bottom:20px;">🎉 You said YES! 💖</h1>
     <div class="big-heart"></div>
     <p style="font-size:1.5rem; margin-top:20px;">Let’s celebrate our love!</p>
   </div>
@@ -204,7 +203,6 @@ button:hover { transform: translateY(-2px); box-shadow:0 16px 28px rgba(213,58,1
 const scenes = Array.from(document.querySelectorAll('.scene'));
 let current = 0;
 
-// Show scene and update dots
 function showScene(index){
   scenes.forEach((scene,i)=>scene.classList.toggle('active', i===index));
   scenes.forEach(scene=>{
@@ -213,7 +211,6 @@ function showScene(index){
   });
 }
 
-// Playful "No" responses
 const noResponses = [
   "Oh! Maybe next time 😅",
   "Haha, I’ll wait for your heart 💖",
@@ -227,9 +224,8 @@ document.querySelectorAll('[data-answer]').forEach(button=>{
     const scene = button.closest('.scene');
     const responseEl = scene.querySelector('.response');
 
-    // Final proposal Yes -> Celebration
     if(scene.dataset.step==='4' && answer==='yes'){
-      current = 5; // Celebration scene
+      current = 5;
       showScene(current);
       startConfetti();
       return;
@@ -247,7 +243,6 @@ document.querySelectorAll('[data-answer]').forEach(button=>{
   });
 });
 
-// Confetti effect
 function startConfetti(){
   const page = scenes[current];
   for(let i=0;i<150;i++){
